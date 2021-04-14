@@ -1,8 +1,8 @@
 
-package com.emergentes.controlador;
+package Examen.controlador;
 
-import com.emergentes.modelo.Libro;
-import com.emergentes.modelo.LibroDAO;
+import Examen.modelo.Gestion_vacunas;
+import Examen.modelo.Gestion_vacunasDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -20,9 +20,9 @@ public class Principal extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession ses= request.getSession();
-        LibroDAO gestor=(LibroDAO) ses.getAttribute("gestor");
+        Gestion_vacunasDAO gestor=(Gestion_vacunasDAO) ses.getAttribute("gestor");
         if(gestor==null){
-            LibroDAO auxi=new LibroDAO();
+            Gestion_vacunasDAO auxi=new Gestion_vacunasDAO();
             ses.setAttribute("gestor", auxi);
         }
         String op=request.getParameter("op");
@@ -34,20 +34,20 @@ public class Principal extends HttpServlet {
         }
         if(op.trim().equals("nuevo")){
             ses=request.getSession();
-            Libro obj=new Libro();
+            Gestion_vacunas obj=new Gestion_vacunas();
             obj.setId(gestor.getCorrelativo()+1);
             request.setAttribute("item", obj);
             request.getRequestDispatcher("vista/nuevo.jsp").forward(request, response);
         }
         if(op.trim().equals("editar")){
             int pos=gestor.posicion(Integer.parseInt(request.getParameter("id")));
-            Libro obj =gestor.getLibros().get(pos);
+            Gestion_vacunas obj =gestor.getVacunas().get(pos);
             request.setAttribute("item", obj);
             request.getRequestDispatcher("vista/editar.jsp").forward(request, response);
         }
         if(op.trim().equals("eliminar")){
             int pos=gestor.posicion(Integer.parseInt(request.getParameter("id")));
-            gestor.getLibros().remove(pos);
+            gestor.getVacunas().remove(pos);
             response.sendRedirect("vista/listado.jsp");
         }
     }
@@ -57,18 +57,20 @@ public class Principal extends HttpServlet {
             throws ServletException, IOException {
         HttpSession ses= request.getSession();
         
-        LibroDAO gestor =(LibroDAO) ses.getAttribute("gestor");
-        Libro obj =new Libro();
+        Gestion_vacunasDAO gestor =(Gestion_vacunasDAO) ses.getAttribute("gestor");
+        Gestion_vacunas obj =new Gestion_vacunas();
         gestor.setCorrelativo(gestor.getCorrelativo()+1);
         
-        obj.setId(gestor.getCorrelativo());
-        obj.setAutor(request.getParameter("autor"));
-        obj.setTitulo(request.getParameter("titulo"));
-        obj.setEstado(Integer.parseInt(request.getParameter("estado")));
+        obj.setId(Integer.parseInt(request.getParameter("id")));
+        obj.setPeso(Integer.parseInt(request.getParameter("peso")));
+        obj.setTalla(Double.parseDouble(request.getParameter("talla")));
+        obj.setNombre(request.getParameter("nombre"));
+        obj.setEstado(String.valueOf(request.getParameter("estado")));
         
         String tipo = request.getParameter("tipo");
         
         if(tipo.equals("-1")){
+            obj.setId(gestor.getCorrelativo());
             gestor.insertar(obj);
         } else{
             gestor.modificar(obj.getId(), obj);

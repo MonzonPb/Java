@@ -1,6 +1,5 @@
 
-
-<%@page import="com.emergentes.modelo.Libro"%>
+<%@page import="Examen.modelo.Gestion_vacunas"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -10,19 +9,21 @@
     </head>
     <body>
         <%
-            Libro item=(Libro) request.getAttribute("item");
+            Gestion_vacunas item=(Gestion_vacunas) request.getAttribute("item");
         %>
-        <h1>Editar libro</h1>
+        <h1>Editar Registro</h1>
         <form action="Principal?op=guardar" method="POST">
             Id:<input type="text" name="id" value="<%= item.getId() %>" size="2" pattern="[1-9]{1}[0-9]*"/>
             <input type="hidden" name="tipo" value="<%= item.getId() %>" />
             <br>
-            Titulo: <input type="text" name="titulo" value="<%= item.getTitulo() %>" required/>
+            Nombre: <input type="text" name="nombre" value="<%= item.getNombre() %>" required/>
             <br>
-            Autor: <input type="text" name="autor" value="<%= item.getAutor()%>" />
+            Peso: <input type="text" name="peso" value="<%= item.getPeso()%>" />
             <br>
-            Estado: <input type="radio" name="estado" value="1" <%= (item.getEstado()==1) ? "checked" : ""%> required/> Disponible
-            <input type="radio" name="estado" value="2" <%= (item.getEstado()==2) ? "checked" : ""%> required/> Prestado
+            Talla: <input type="text" name="talla" value="<%= item.getTalla()%>" />
+            <br>
+            Estado: <input type="radio" name="estado" value="Si" <%= (item.getEstado()=="Si") ? "checked" : ""%> required/> Si
+            <input type="radio" name="estado" value="No" <%= (item.getEstado()=="No") ? "checked" : ""%> required/> No
             <br>
             <input type="submit" value="Enviar" />
         </form>
